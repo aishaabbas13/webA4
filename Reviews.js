@@ -7,18 +7,19 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// Review schema
-var ReviewSchema = new Schema({
-    reviewer: {type: String, required: true},
-    movie: {type: String, required: true},
-    quote: {type: String, required: true},
-    rating: {
-        type: Number,
-        min: 0,
-        max: 5,
-        required: true
-    }
+var reviewSchema = Schema({
+    MovieTitle:{type: String, required: true},
+    ReviewerName: {type:String,required: true},
+    smallQuote: {type: String, required: true},
+    rating:{type:Number, max:5, min:1, required: true}
 });
 
-// return the model
-module.exports = mongoose.model('Review', ReviewSchema);
+
+reviewSchema.pre('save',function (next) {
+    if(this.length == 0){
+        return next(new Error('There must be one reviewer'));
+    }
+    next()
+});
+
+module.exports = mongoose.model('Review', reviewSchema);

@@ -7,33 +7,29 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// Movie schema
-var MovieSchema = new Schema({
-    title: { type: String, required: true },
-    year: {
-        type: Number,
-        min: 1880,
-        max: 2018,
-        required: true
-    },
-    genre: {
-        type: String,
-        enum: ['Action','Adventure', 'Comedy',
-            'Drama','Fantasy','Horror', 'Mystery',
-            'Thriller', 'Western'],
-        required: true
-    },
-    actors: {
-        type: [{
-            actorName: {type: String, required: true},
-            characterName: {type: String, required: true}
-        }], required: true
-    },
-    image: {
-        type: String
-    }
+// user schema
+
+var actorSchema = Schema({
+    actorName: {type:String,required: true},
+    characterName: {type:String,required:true}
 });
 
+var movieSchema = Schema({
+    Title:{type: String, required: true, index: { unique: true }},
+    releaseYear: {type: Number, required: true},
+    Genre:{
+        type: String,
+        enum: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy',
+            'Horror', 'Mystery', 'Thriller', 'Western']
+    },
+    Actors: {type:[actorSchema]}
+});
 
-// return the model
-module.exports = mongoose.model('Movie', MovieSchema);
+movieSchema.pre('save',function (next) {
+    if(this.Actors.length < 3){
+        return next(new Error('Fewer than 3 Actors'));
+    }
+    next()
+});
+
+module.exports = mongoose.model('Movie', movieSchema);
