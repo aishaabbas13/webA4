@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var mongodb = 'mongodb://ayesha:perwaiz@ds213209.mlab.com:13209/moviedb';
+var mongodb = 'mongodb://Aisha123:12345@ds263948.mlab.com:63948/webapi';
 mongoose.connect(mongodb);
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
