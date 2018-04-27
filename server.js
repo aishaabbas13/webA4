@@ -19,6 +19,8 @@ app.use(cors());
 
 var router = express.Router();
 
+
+
 router.route('/postjwt')
     .post(authJwtController.isAuthenticated, function (req, res) {
             console.log(req.body);
